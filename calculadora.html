@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora 🎃</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: radial-gradient(
+                circle at top,
+                #39204f,
+                #171020 65%,
+                #0c0911
+            );
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: white;
+        }
+
+        .calculadora {
+            width: 100%;
+            max-width: 430px;
+            padding: 35px 28px;
+            background: #24192f;
+            border: 2px solid #ff8717;
+            border-radius: 24px;
+            box-shadow: 0 0 35px #ff790044;
+            text-align: center;
+        }
+
+        .decoracion {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #ff922b;
+            font-size: 30px;
+            margin: 10px 0;
+        }
+
+        .subtitulo {
+            color: #cbb7dd;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin: 17px 0 8px;
+            font-weight: bold;
+            color: #e8d8f5;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #604578;
+            border-radius: 12px;
+            background: #140e1c;
+            color: white;
+            font-size: 19px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #ff922b;
+            box-shadow: 0 0 12px #ff922b55;
+        }
+
+        .botones {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        button {
+            padding: 16px 10px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.2);
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .sumar {
+            background: #e87812;
+        }
+
+        .restar {
+            background: #7542b4;
+        }
+
+        .multiplicar {
+            background: #a44bba;
+        }
+
+        .dividir {
+            background: #d65d20;
+        }
+
+        .resultado {
+            margin-top: 25px;
+            padding: 20px 12px;
+            border-radius: 14px;
+            background: #130d1b;
+            border: 1px solid #684580;
+            font-size: 21px;
+            font-weight: bold;
+            color: #ffb45c;
+            overflow-wrap: anywhere;
+        }
+
+        .resultado.error {
+            color: #ff7777;
+            border-color: #ff7777;
+        }
+
+        .pie {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #a997ba;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="calculadora">
+
+        <div class="decoracion">🎃 👻 🦇</div>
+
+        <h1>CALCULADORA </h1>
+
+        <p class="subtitulo">
+            FELIZ HALLOWEN
+        </p>
+
+        <label for="numero1">🔢 Primer número</label>
+
+        <input
+            type="text"
+            id="numero1"
+            inputmode="decimal"
+            placeholder="Escribe el primer número"
+            autocomplete="off"
+        >
+
+        <label for="numero2">🔢 Segundo número</label>
+
+        <input
+            type="text"
+            id="numero2"
+            inputmode="decimal"
+            placeholder="Escribe el segundo número"
+            autocomplete="off"
+        >
+
+        <div class="botones">
+
+            <button class="sumar"
+                onclick="calcular('sumar')">
+                ➕ Sumar
+            </button>
+
+            <button class="restar"
+                onclick="calcular('restar')">
+                ➖ Restar
+            </button>
+
+            <button class="multiplicar"
+                onclick="calcular('multiplicar')">
+                ✖ Multiplicar
+            </button>
+
+            <button class="dividir"
+                onclick="calcular('dividir')">
+                ➗ Dividir
+            </button>
+
+        </div>
+
+        <div class="resultado" id="resultado" aria-live="polite">
+            Resultado: --
+        </div>
+
+        <p class="pie">
+            🎃 Inge, que los únicos sustos sean de hallowen y no las notas 😃👻
+        </p>
+
+    </main>
+
+    <script>
+
+        function mostrarResultado(mensaje, error = false) {
+            const pantalla = document.getElementById("resultado");
+
+            pantalla.textContent = mensaje;
+            pantalla.classList.toggle("error", error);
+        }
+
+        function calcular(operacion) {
+
+            // Obtener los valores escritos
+            let valor1 = document.getElementById("numero1").value.trim();
+            let valor2 = document.getElementById("numero2").value.trim();
+
+            if (valor1 === "" || valor2 === "") {
+                mostrarResultado(
+                    "⚠️ Error: Ingresa ambos números.",
+                    true
+                );
+                return;
+            }
+
+            valor1 = valor1.replace(",", ".");
+            valor2 = valor2.replace(",", ".");
+
+            const formatoNumero = /^[+-]?(?:\d+\.?\d*|\.\d+)$/;
+
+            if (
+                !formatoNumero.test(valor1) ||
+                !formatoNumero.test(valor2)
+            ) {
+                mostrarResultado(
+                    "👻 Error: Solo puedes ingresar números válidos.",
+                    true
+                );
+                return;
+            }
+
+            const numero1 = Number(valor1);
+            const numero2 = Number(valor2);
+
+            if (
+                !Number.isFinite(numero1) ||
+                !Number.isFinite(numero2)
+            ) {
+                mostrarResultado(
+                    "⚠️ Error: Los números no son válidos.",
+                    true
+                );
+                return;
+            }
+
+            let resultado;
+
+            switch (operacion) {
+
+                case "sumar":
+                    resultado = numero1 + numero2;
+                    break;
+
+                case "restar":
+                    resultado = numero1 - numero2;
+                    break;
+
+                case "multiplicar":
+                    resultado = numero1 * numero2;
+                    break;
+
+                case "dividir":
+
+                    if (numero2 === 0) {
+                        mostrarResultado(
+                            "🚫 Error: No se puede dividir entre cero.",
+                            true
+                        );
+                        return;
+                    }
+
+                    resultado = numero1 / numero2;
+                    break;
+
+                default:
+                    mostrarResultado(
+                        "Error: Operación desconocida.",
+                        true
+                    );
+                    return;
+            }
+
+            mostrarResultado(
+                "🎃 Resultado: " +
+                Number(resultado.toPrecision(12))
+            );
+        }
+
+    </script>
+
+</body>
+</html>
